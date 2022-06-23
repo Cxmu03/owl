@@ -31,15 +31,26 @@ public:
     Window(Size size, std::string_view title, WindowStyle style = Default);
 
 public:
-    //void Run(const std::function<void(Window&)>& updateFunc);
-    template <typename UpdateFunc>
+    template<typename UpdateFunc>
     void Run(UpdateFunc fun);
 
+    template<typename UpdateFunc>
+    void RunRaw(UpdateFunc fun);
+
     [[nodiscard]] bool IsOpen() const;
+    [[nodiscard]] Size GetSize() const;
+    [[nodiscard]] Size GetPosition() const;
+
+    void SetTitle(std::string_view);
+    void SetSize(Size);
+    void WindowVisible(bool);
+    void SetPosition(Size);
+    void MouseCursorVisible(bool);
+
     void Close();
 
-    void Clear(Color);
-    void Display();
+    void Clear(Color) const;
+    void Display() const;
 
 private:
     struct GlfwWindowDestructor {
@@ -55,13 +66,20 @@ private:
     bool isOpen;
 };
 
-template <typename UpdateFunc>
+template<typename UpdateFunc>
 void Window::Run(UpdateFunc fun) {
-    while(this->isOpen) {
+    while (this->isOpen) {
         this->Clear({255, 255, 255, 1.f});
         fun();
         this->Display();
         glfwPollEvents();
+    }
+}
+
+template<typename UpdateFunc>
+void Window::RunRaw(UpdateFunc fun) {
+    while (this->isOpen) {
+        fun();
     }
 }
 
