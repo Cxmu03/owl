@@ -1,5 +1,7 @@
-#include <iostream>
+#include "../owl/Window.hpp"
 
 int main() {
-    std::cout << "Hello World";
+    owl::Window window({500, 500}, "Poggers");
+
+    window.Run([](){});
 }

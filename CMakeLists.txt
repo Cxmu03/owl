@@ -9,4 +9,6 @@ add_definitions(-DGLFW_INCLUDE_NONE)
 include_directories(vendor/glad/include)
 include_directories(vendor/glfw/include)
 
-add_executable(owl example/main.cpp owl/Window.h owl/Window.cpp)
+add_executable(owl example/main.cpp owl/Window.hpp owl/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c owl/Color.hpp owl/Color.cpp owl/Util.hpp)
+
+target_link_libraries(owl glfw)
