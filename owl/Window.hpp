@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Color.hpp"
+#include "Vec2.hpp"
 
 namespace owl {
 
@@ -18,17 +19,20 @@ struct Size {
     static Size PrimaryMonitorSize();
 };
 
-enum WindowStyle {
+namespace Style {
+enum {
     Resize = 1 << 0,
     Decorated = 1 << 1,
-    Fullscreen = 1 << 2,
-    Floating = 1 << 3,
-    Default = Resize | Decorated
+    Close = 1 << 2,
+    Fullscreen = 1 << 3,
+    Floating = 1 << 4,
+    Default = Resize | Decorated | Close
 };
+}
 
 class Window {
 public:
-    Window(Size size, std::string_view title, WindowStyle style = Default);
+    Window(Size size, std::string_view title, uint32_t style = Style::Default);
 
 public:
     template<typename UpdateFunc>
@@ -39,11 +43,15 @@ public:
 
     [[nodiscard]] bool IsOpen() const;
     [[nodiscard]] bool IsFocused() const;
+    [[nodiscard]] bool IsFullscreen() const;
+    [[nodiscard]] bool KeyDown(int) const;
     [[nodiscard]] Size GetSize() const;
     [[nodiscard]] Size GetPosition() const;
 
     void SetTitle(std::string_view);
     void SetSize(Size);
+    void SetStyle(uint32_t);
+    void ToggleFullscreen();
     void WindowVisible(bool);
     void SetPosition(Size);
     void MouseCursorVisible(bool);
@@ -56,6 +64,9 @@ public:
     void Display() const;
 
 private:
+    void UpdateViewport();
+
+private:
     struct GlfwWindowDestructor {
         void operator()(GLFWwindow* window) {
             glfwDestroyWindow(window);
@@ -65,9 +76,12 @@ private:
 private:
     std::unique_ptr<GLFWwindow, GlfwWindowDestructor> m_GLFWWindow;
     std::string_view m_WindowTitle;
-    owl::Size m_WindowSize;
+    Size m_WindowSize;
+    Size m_ViewportSize;
+    Vec2u m_WindowPos;
     bool m_IsOpen;
     bool m_IsFocused;
+    uint32_t m_CurrentStyle;
 };
 
 template<typename UpdateFunc>
@@ -76,7 +90,7 @@ void Window::Run(UpdateFunc fun) {
         this->Clear({255, 255, 255, 1.f});
         fun();
         this->Display();
-        glfwPollEvents();
+        glfwWaitEvents();
     }
 }
 

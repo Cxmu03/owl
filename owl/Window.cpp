@@ -9,7 +9,11 @@ Size Size::PrimaryMonitorSize() {
     return { (size_t) primaryVideoMode->width, (size_t) primaryVideoMode->height };
 }
 
-Window::Window(Size size, std::string_view title, WindowStyle style /* = Default*/) : m_WindowSize(size), m_WindowTitle(title) {
+bool Window::KeyDown(int key) const {
+    return glfwGetKey(m_GLFWWindow.get(), key) == GLFW_PRESS;
+}
+
+Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/) : m_WindowSize(size), m_WindowTitle(title) {
     static bool glfwIsInitialized;
     static bool gladIsInitialized;
 
@@ -33,8 +37,7 @@ Window::Window(Size size, std::string_view title, WindowStyle style /* = Default
 
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) -> void {
         Window& thisWindow = *((Window*) glfwGetWindowUserPointer(window));
-        thisWindow.m_WindowSize = { (size_t) width, (size_t) height};
-        glViewport(0, 0, width, height);
+        thisWindow.UpdateViewport();
     });
 
     glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
@@ -47,11 +50,19 @@ Window::Window(Size size, std::string_view title, WindowStyle style /* = Default
         Window& thisWindow = *((Window*) glfwGetWindowUserPointer(window));
         thisWindow.m_IsFocused = focused;
         if(focused) {
-            glViewport(0, 0, thisWindow.m_WindowSize.width, thisWindow.m_WindowSize.height);
+            thisWindow.UpdateViewport();
         }
     });
 
+    SetStyle(style);
+    m_CurrentStyle = style;
+
     m_IsOpen = true;
+}
+
+void Window::UpdateViewport() {
+    glfwGetFramebufferSize(m_GLFWWindow.get(), (int*)&m_ViewportSize.width, (int*)&m_ViewportSize.height);
+    glViewport(0, 0, m_ViewportSize.width, m_ViewportSize.height);
 }
 
 bool Window::IsOpen() const {
@@ -62,8 +73,12 @@ bool Window::IsFocused() const {
     return m_IsFocused;
 }
 
+bool Window::IsFullscreen() const {
+    return glfwGetWindowMonitor(m_GLFWWindow.get()) != nullptr;
+}
+
 Size Window::GetSize() const {
-    return m_WindowSize;
+    return m_ViewportSize;
 }
 
 Size Window::GetPosition() const {
@@ -87,6 +102,42 @@ void Window::Close() {
 void Window::SetSize(Size newSize) {
     glViewport(0, 0, newSize.width, newSize.height);
     m_WindowSize = newSize;
+    m_ViewportSize = newSize;
+}
+
+void Window::ToggleFullscreen() {
+    if(IsFullscreen()) {
+        glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_WindowSize.width, m_WindowSize.height, GLFW_DONT_CARE);
+        UpdateViewport();
+        return;
+    }
+
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* vidMode = glfwGetVideoMode(primaryMonitor);
+    glfwGetWindowSize(m_GLFWWindow.get(), (int*) &m_WindowSize.width, (int*) &m_WindowSize.height);
+    glfwGetWindowPos(m_GLFWWindow.get(), (int*) &m_WindowPos.x, (int*) &m_WindowPos.y);
+    glfwSetWindowMonitor(m_GLFWWindow.get(), primaryMonitor, 0, 0, vidMode->width, vidMode->height, vidMode->refreshRate);
+    UpdateViewport();
+}
+
+void Window::SetStyle(uint32_t style) {
+    if((!IsFullscreen() && (style & Style::Fullscreen)) || (IsFullscreen() && !(style & Style::Fullscreen))) {
+        ToggleFullscreen();
+        return;
+    }
+    m_CurrentStyle = style;
+    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_RESIZABLE, style & Style::Resize);
+    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_DECORATED, style & Style::Decorated);
+    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_FLOATING, style & Style::Floating);
+    if(style & Style::Close) {
+        glfwSetWindowCloseCallback(m_GLFWWindow.get(), [](GLFWwindow* window) {
+            Window& thisWindow = *((Window*) glfwGetWindowUserPointer(window));
+            thisWindow.m_IsOpen = false;
+            glfwDestroyWindow(thisWindow.m_GLFWWindow.get());
+        });
+    } else {
+        glfwSetWindowCloseCallback(m_GLFWWindow.get(), [](GLFWwindow* window){});
+    }
 }
 
 void Window::SetPosition(Size newPos) {
