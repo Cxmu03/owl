@@ -38,6 +38,7 @@ public:
     void RunRaw(UpdateFunc fun);
 
     [[nodiscard]] bool IsOpen() const;
+    [[nodiscard]] bool IsFocused() const;
     [[nodiscard]] Size GetSize() const;
     [[nodiscard]] Size GetPosition() const;
 
@@ -46,6 +47,8 @@ public:
     void WindowVisible(bool);
     void SetPosition(Size);
     void MouseCursorVisible(bool);
+    void Focus();
+    void RequestFocus();
 
     void Close();
 
@@ -63,12 +66,13 @@ private:
     std::unique_ptr<GLFWwindow, GlfwWindowDestructor> m_GLFWWindow;
     std::string_view m_WindowTitle;
     owl::Size m_WindowSize;
-    bool isOpen;
+    bool m_IsOpen;
+    bool m_IsFocused;
 };
 
 template<typename UpdateFunc>
 void Window::Run(UpdateFunc fun) {
-    while (this->isOpen) {
+    while (this->m_IsOpen) {
         this->Clear({255, 255, 255, 1.f});
         fun();
         this->Display();
@@ -78,7 +82,7 @@ void Window::Run(UpdateFunc fun) {
 
 template<typename UpdateFunc>
 void Window::RunRaw(UpdateFunc fun) {
-    while (this->isOpen) {
+    while (this->m_IsOpen) {
         fun();
     }
 }

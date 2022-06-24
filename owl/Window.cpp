@@ -39,14 +39,26 @@ Window::Window(Size size, std::string_view title, WindowStyle style /* = Default
 
     glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
         Window& thisWindow = *((Window*) glfwGetWindowUserPointer(window));
-        thisWindow.isOpen = false;
+        thisWindow.m_IsOpen = false;
     });
 
-    isOpen = true;
+    glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focused) {
+        Window& thisWindow = *((Window*) glfwGetWindowUserPointer(window));
+        thisWindow.m_IsFocused = focused;
+        if(focused) {
+            glViewport(0, 0, thisWindow.m_WindowSize.width, thisWindow.m_WindowSize.height);
+        }
+    });
+
+    m_IsOpen = true;
 }
 
 bool Window::IsOpen() const {
-    return isOpen;
+    return m_IsOpen;
+}
+
+bool Window::IsFocused() const {
+    return m_IsFocused;
 }
 
 Size Window::GetSize() const {
@@ -59,8 +71,16 @@ Size Window::GetPosition() const {
     return { (size_t) xPos, (size_t) yPos };
 }
 
+void Window::Focus() {
+    glfwFocusWindow(m_GLFWWindow.get());
+}
+
+void Window::RequestFocus() {
+    glfwRequestWindowAttention(m_GLFWWindow.get());
+}
+
 void Window::Close() {
-    isOpen = false;
+    m_IsOpen = false;
 }
 
 void Window::SetSize(Size newSize) {
