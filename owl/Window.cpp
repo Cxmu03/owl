@@ -40,6 +40,7 @@ Window::Window(Size size, std::string_view title, WindowStyle style /* = Default
     glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
         Window& thisWindow = *((Window*) glfwGetWindowUserPointer(window));
         thisWindow.m_IsOpen = false;
+        glfwDestroyWindow(thisWindow.m_GLFWWindow.get());
     });
 
     glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int focused) {
