@@ -3,19 +3,19 @@
 
 #include <stdint.h>
 
-namespace owl {
+namespace owl::color {
 
 struct NormalizedRGB;
 struct HSV;
 
-struct Color {
+struct RBG {
     uint8_t r;
     uint8_t g;
     uint8_t b;
     float a;
 
-    NormalizedRGB ToNormalizedRGB();
-    HSV ToHSV();
+    [[nodiscard]] NormalizedRGB ToNormalizedRGB() const;
+    [[nodiscard]] HSV ToHSV() const;
 };
 
 struct NormalizedRGB {
@@ -24,18 +24,17 @@ struct NormalizedRGB {
     float b;
     float a;
 
-    Color ToRBG();
-    HSV ToHSV();
+    [[nodiscard]] RBG ToRBG() const;
+    [[nodiscard]] HSV ToHSV() const;
 };
 
 struct HSV {
     float h;
     float s;
-    float l;
     float v;
 
-    Color ToRGB();
-    NormalizedRGB ToNormalizedRGB();
+    [[nodiscard]] RBG ToRGB() const;
+    [[nodiscard]] NormalizedRGB ToNormalizedRGB() const;
 };
 
 }

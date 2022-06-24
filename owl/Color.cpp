@@ -1,9 +1,11 @@
+#include <cmath>
+
 #include "Color.hpp"
 #include "Util.hpp"
 
-namespace owl {
+namespace owl::color {
 
-NormalizedRGB Color::ToNormalizedRGB() {
+NormalizedRGB RBG::ToNormalizedRGB() const {
     return {
             MapToRange(static_cast<float>(r), 0.f, 255.f, 0.f, 1.f),
             MapToRange(static_cast<float>(g), 0.f, 255.f, 0.f, 1.f),
@@ -12,8 +14,8 @@ NormalizedRGB Color::ToNormalizedRGB() {
     };
 }
 
-HSV Color::ToHSV() {
-    HSV         out;
+HSV RBG::ToHSV() const {
+    HSV         out = {0.f, 0.f, 0.f};
     NormalizedRGB normalized = ToNormalizedRGB();
     double      min, max, delta;
 
@@ -56,79 +58,52 @@ HSV Color::ToHSV() {
     return out;
 }
 
-Color NormalizedRGB::ToRBG() {
+RBG NormalizedRGB::ToRBG() const {
     return {
             static_cast<uint8_t>(MapToRange(r, 0.f, 1.f, 0.f, 255.f)),
-            static_cast<uint8_t>(MapToRange(r, 0.f, 1.f, 0.f, 255.f)),
-            static_cast<uint8_t>(MapToRange(r, 0.f, 1.f, 0.f, 255.f)),
+            static_cast<uint8_t>(MapToRange(g, 0.f, 1.f, 0.f, 255.f)),
+            static_cast<uint8_t>(MapToRange(b, 0.f, 1.f, 0.f, 255.f)),
             a
     };
 }
 
-HSV NormalizedRGB::ToHSV() {
+HSV NormalizedRGB::ToHSV() const {
     return ToRBG().ToHSV();
 }
 
-Color HSV::ToRGB() {
+RBG HSV::ToRGB() const {
     return ToNormalizedRGB().ToRBG();
 }
 
-NormalizedRGB HSV::ToNormalizedRGB() {
-    double      hh, p, q, t, ff;
-    long        i;
+NormalizedRGB HSV::ToNormalizedRGB() const {
+    NormalizedRGB RGB;
+    float H = h, S = s, V = v,
+            P, Q, T,
+            fract;
 
-    NormalizedRGB out;
+    (H == 360.)?(H = 0.):(H /= 60.);
+    fract = H - floorf(H);
 
-    if(s <= 0.0) {       // < is bogus, just shuts up warnings
-        out.r = v;
-        out.g = v;
-        out.b = v;
-        return out;
-    }
-    hh = h;
-    if(hh >= 360.0) hh = 0.0;
-    hh /= 60.0;
-    i = (long)hh;
-    ff = hh - i;
-    p = v * (1.0 - s);
-    q = v * (1.0 - (s * ff));
-    t = v * (1.0 - (s * (1.0 - ff)));
+    P = V*(1.f - S);
+    Q = V*(1.f - S*fract);
+    T = V*(1.f - S*(1.f - fract));
 
-    switch(i) {
-    case 0:
-        out.r = v;
-        out.g = t;
-        out.b = p;
-        break;
-    case 1:
-        out.r = q;
-        out.g = v;
-        out.b = p;
-        break;
-    case 2:
-        out.r = p;
-        out.g = v;
-        out.b = t;
-        break;
+    if      (0. <= H && H < 1.)
+        RGB = {.r = V, .g = T, .b = P};
+    else if (1. <= H && H < 2.)
+        RGB = {.r = Q, .g = V, .b = P};
+    else if (2. <= H && H < 3.)
+        RGB = {.r = P, .g = V, .b = T};
+    else if (3. <= H && H < 4.)
+        RGB = {.r = P, .g = Q, .b = V};
+    else if (4. <= H && H < 5.)
+        RGB = {.r = T, .g = P, .b = V};
+    else if (5. <= H && H < 6.)
+        RGB = {.r = V, .g = P, .b = Q};
+    else
+        RGB = {.r = 0., .g = 0., .b = 0.};
 
-    case 3:
-        out.r = p;
-        out.g = q;
-        out.b = v;
-        break;
-    case 4:
-        out.r = t;
-        out.g = p;
-        out.b = v;
-        break;
-    case 5:
-    default:
-        out.r = v;
-        out.g = p;
-        out.b = q;
-        break;
-    }
-    return out;
+    return RGB;
 }
 
 }

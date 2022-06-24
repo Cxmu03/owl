@@ -52,7 +52,7 @@ public:
 
     void Close();
 
-    void Clear(Color) const;
+    void Clear(color::RBG) const;
     void Display() const;
 
 private:
