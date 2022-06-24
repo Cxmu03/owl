@@ -5,7 +5,8 @@
 
 namespace owl {
 
-struct GlColor;
+struct NormalizedRGB;
+struct HSV;
 
 struct Color {
     uint8_t r;
@@ -13,16 +14,28 @@ struct Color {
     uint8_t b;
     float a;
 
-    GlColor ToGlColor();
+    NormalizedRGB ToNormalizedRGB();
+    HSV ToHSV();
 };
 
-struct GlColor {
+struct NormalizedRGB {
     float r;
     float g;
     float b;
     float a;
 
     Color ToRBG();
+    HSV ToHSV();
+};
+
+struct HSV {
+    float h;
+    float s;
+    float l;
+    float v;
+
+    Color ToRGB();
+    NormalizedRGB ToNormalizedRGB();
 };
 
 }
