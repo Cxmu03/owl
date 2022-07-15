@@ -1,5 +1,4 @@
 #include <glad/glad.h>
-#include <iostream>
 
 #include "Window.hpp"
 
@@ -118,7 +117,6 @@ void Window::SetSize(Size newSize) {
 }
 
 void Window::ToggleFullscreen() {
-    std::cout << IsFullscreen() << std::endl;
     if(IsFullscreen()) {
         glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_WindowSizeBuffer.width, m_WindowSizeBuffer.height, GLFW_DONT_CARE);
         UpdateViewport();
