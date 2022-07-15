@@ -120,13 +120,13 @@ void Window::SetSize(Size newSize) {
 void Window::ToggleFullscreen() {
     std::cout << IsFullscreen() << std::endl;
     if(IsFullscreen()) {
-        glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_ViewportSize.width, m_ViewportSize.height, GLFW_DONT_CARE);
+        glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_WindowSizeBuffer.width, m_WindowSizeBuffer.height, GLFW_DONT_CARE);
         UpdateViewport();
         return;
     }
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* vidMode = glfwGetVideoMode(primaryMonitor);
-    glfwGetWindowSize(m_GLFWWindow.get(), (int*) &m_ViewportSize.width, (int*) &m_ViewportSize.height);
+    glfwGetWindowSize(m_GLFWWindow.get(), (int*) &m_WindowSizeBuffer.width, (int*) &m_WindowSizeBuffer.height);
     glfwGetWindowPos(m_GLFWWindow.get(), (int*) &m_WindowPos.x, (int*) &m_WindowPos.y);
     glfwSetWindowMonitor(m_GLFWWindow.get(), primaryMonitor, 0, 0, vidMode->width, vidMode->height, vidMode->refreshRate);
     UpdateViewport();
