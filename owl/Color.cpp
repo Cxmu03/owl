@@ -7,9 +7,9 @@ namespace owl::color {
 
 NormalizedRGB RBG::ToNormalizedRGB() const {
     return {
-            MapToRange(static_cast<float>(r), 0.f, 255.f, 0.f, 1.f),
-            MapToRange(static_cast<float>(g), 0.f, 255.f, 0.f, 1.f),
-            MapToRange(static_cast<float>(b), 0.f, 255.f, 0.f, 1.f),
+            util::MapToRange(static_cast<float>(r), 0.f, 255.f, 0.f, 1.f),
+            util::MapToRange(static_cast<float>(g), 0.f, 255.f, 0.f, 1.f),
+            util::MapToRange(static_cast<float>(b), 0.f, 255.f, 0.f, 1.f),
             a
     };
 }
@@ -60,9 +60,9 @@ HSV RBG::ToHSV() const {
 
 RBG NormalizedRGB::ToRBG() const {
     return {
-            static_cast<uint8_t>(MapToRange(r, 0.f, 1.f, 0.f, 255.f)),
-            static_cast<uint8_t>(MapToRange(g, 0.f, 1.f, 0.f, 255.f)),
-            static_cast<uint8_t>(MapToRange(b, 0.f, 1.f, 0.f, 255.f)),
+            static_cast<uint8_t>(util::MapToRange(r, 0.f, 1.f, 0.f, 255.f)),
+            static_cast<uint8_t>(util::MapToRange(g, 0.f, 1.f, 0.f, 255.f)),
+            static_cast<uint8_t>(util::MapToRange(b, 0.f, 1.f, 0.f, 255.f)),
             a
     };
 }
