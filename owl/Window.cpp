@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <iostream>
 
 #include "Window.hpp"
 
@@ -13,7 +14,7 @@ bool Window::KeyDown(int key) const {
     return glfwGetKey(m_GLFWWindow.get(), key) == GLFW_PRESS;
 }
 
-Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/) : m_WindowSize(size), m_WindowTitle(title) {
+Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/) : m_ViewportSize(size), m_WindowTitle(title) {
     static bool glfwIsInitialized;
     static bool gladIsInitialized;
 
@@ -24,12 +25,19 @@ Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    GLFWwindow* window = glfwCreateWindow(m_WindowSize.width, m_WindowSize.height, title.data(), nullptr, nullptr);
+
+    if(style | WindowStyle::Maximized) {
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+    }
+
+    GLFWwindow* window = glfwCreateWindow(m_ViewportSize.width, m_ViewportSize.height, title.data(), nullptr, nullptr);
     m_GLFWWindow = std::unique_ptr<GLFWwindow, GlfwWindowDestructor>(window);
     glfwSetWindowUserPointer(window, this);
     glfwMakeContextCurrent(window);
 
     glfwSetWindowTitle(window, m_WindowTitle.data());
+
+    glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
 
     if(!gladIsInitialized && !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         throw std::runtime_error("Could not initialize glad\n");
@@ -77,6 +85,10 @@ bool Window::IsFullscreen() const {
     return glfwGetWindowMonitor(m_GLFWWindow.get()) != nullptr;
 }
 
+bool Window::IsMaximized() const {
+    return glfwGetWindowAttrib(m_GLFWWindow.get(), GLFW_MAXIMIZED);
+}
+
 Size Window::GetSize() const {
     return m_ViewportSize;
 }
@@ -101,35 +113,60 @@ void Window::Close() {
 
 void Window::SetSize(Size newSize) {
     glViewport(0, 0, newSize.width, newSize.height);
-    m_WindowSize = newSize;
+    m_ViewportSize = newSize;
     m_ViewportSize = newSize;
 }
 
 void Window::ToggleFullscreen() {
+    std::cout << IsFullscreen() << std::endl;
     if(IsFullscreen()) {
-        glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_WindowSize.width, m_WindowSize.height, GLFW_DONT_CARE);
+        glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_ViewportSize.width, m_ViewportSize.height, GLFW_DONT_CARE);
         UpdateViewport();
         return;
     }
-
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* vidMode = glfwGetVideoMode(primaryMonitor);
-    glfwGetWindowSize(m_GLFWWindow.get(), (int*) &m_WindowSize.width, (int*) &m_WindowSize.height);
+    glfwGetWindowSize(m_GLFWWindow.get(), (int*) &m_ViewportSize.width, (int*) &m_ViewportSize.height);
     glfwGetWindowPos(m_GLFWWindow.get(), (int*) &m_WindowPos.x, (int*) &m_WindowPos.y);
     glfwSetWindowMonitor(m_GLFWWindow.get(), primaryMonitor, 0, 0, vidMode->width, vidMode->height, vidMode->refreshRate);
     UpdateViewport();
 }
 
+void Window::Maxmize() {
+    if(IsMaximized()) {
+        return;
+    }
+    glfwMaximizeWindow(m_GLFWWindow.get());
+    UpdateViewport();
+}
+
+void Window::Restore() {
+    if(IsMaximized()) {
+        glfwRestoreWindow(m_GLFWWindow.get());
+        UpdateViewport();
+    }
+    if(IsFullscreen()) {
+        ToggleFullscreen();
+    }
+}
+
 void Window::SetStyle(uint32_t style) {
-    if((!IsFullscreen() && (style & Style::Fullscreen)) || (IsFullscreen() && !(style & Style::Fullscreen))) {
+    m_CurrentStyle = style;
+
+    if((!IsFullscreen() && (style & WindowStyle::Fullscreen)) || (IsFullscreen() && !(style & WindowStyle::Fullscreen))) {
         ToggleFullscreen();
         return;
     }
-    m_CurrentStyle = style;
-    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_RESIZABLE, style & Style::Resize);
-    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_DECORATED, style & Style::Decorated);
-    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_FLOATING, style & Style::Floating);
-    if(style & Style::Close) {
+
+    if(style & WindowStyle::Maximized) {
+        glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_MAXIMIZED, GLFW_TRUE);
+    }
+
+    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_RESIZABLE, style & WindowStyle::Resize);
+    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_DECORATED, style & WindowStyle::Decorated);
+    glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_FLOATING, style & WindowStyle::Floating);
+
+    if(style & WindowStyle::Close) {
         glfwSetWindowCloseCallback(m_GLFWWindow.get(), [](GLFWwindow* window) {
             Window& thisWindow = *((Window*) glfwGetWindowUserPointer(window));
             thisWindow.m_IsOpen = false;

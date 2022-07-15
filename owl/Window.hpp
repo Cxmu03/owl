@@ -19,20 +19,21 @@ struct Size {
     static Size PrimaryMonitorSize();
 };
 
-namespace Style {
+namespace WindowStyle {
 enum {
     Resize = 1 << 0,
     Decorated = 1 << 1,
     Close = 1 << 2,
     Fullscreen = 1 << 3,
     Floating = 1 << 4,
+    Maximized = 1 << 5,
     Default = Resize | Decorated | Close
 };
 }
 
 class Window {
 public:
-    Window(Size size, std::string_view title, uint32_t style = Style::Default);
+    Window(Size size, std::string_view title, uint32_t style = WindowStyle::Default);
 
 public:
     template<typename UpdateFunc>
@@ -44,6 +45,7 @@ public:
     [[nodiscard]] bool IsOpen() const;
     [[nodiscard]] bool IsFocused() const;
     [[nodiscard]] bool IsFullscreen() const;
+    [[nodiscard]] bool IsMaximized() const;
     [[nodiscard]] bool KeyDown(int) const;
     [[nodiscard]] Size GetSize() const;
     [[nodiscard]] Size GetPosition() const;
@@ -52,6 +54,8 @@ public:
     void SetSize(Size);
     void SetStyle(uint32_t);
     void ToggleFullscreen();
+    void Maxmize();
+    void Restore();
     void WindowVisible(bool);
     void SetPosition(Size);
     void MouseCursorVisible(bool);
@@ -65,6 +69,8 @@ public:
 
 private:
     void UpdateViewport();
+    void PushState();
+    void PopState();
 
 private:
     struct GlfwWindowDestructor {
@@ -76,8 +82,8 @@ private:
 private:
     std::unique_ptr<GLFWwindow, GlfwWindowDestructor> m_GLFWWindow;
     std::string_view m_WindowTitle;
-    Size m_WindowSize;
     Size m_ViewportSize;
+    Size m_WindowSizeBuffer;
     Vec2u m_WindowPos;
     bool m_IsOpen;
     bool m_IsFocused;
