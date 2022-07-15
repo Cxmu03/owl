@@ -19,8 +19,7 @@ struct Size {
     static Size PrimaryMonitorSize();
 };
 
-namespace WindowStyle {
-enum {
+enum WindowStyle {
     Resize = 1 << 0,
     Decorated = 1 << 1,
     Close = 1 << 2,
@@ -29,7 +28,6 @@ enum {
     Maximized = 1 << 5,
     Default = Resize | Decorated | Close
 };
-}
 
 class Window {
 public:
