@@ -51,6 +51,7 @@ public:
     void SetTitle(std::string_view);
     void SetSize(Size);
     void SetStyle(uint32_t);
+    void SetClearColor(color::RBG);
     void ToggleFullscreen();
     void Maxmize();
     void Restore();
@@ -80,6 +81,7 @@ private:
 private:
     std::unique_ptr<GLFWwindow, GlfwWindowDestructor> m_GLFWWindow;
     std::string_view m_WindowTitle;
+    color::RBG m_ClearColor;
     Size m_ViewportSize;
     Size m_WindowSizeBuffer;
     Vec2u m_WindowPos;
@@ -91,7 +93,7 @@ private:
 template<typename UpdateFunc>
 void Window::Run(UpdateFunc fun) {
     while (this->m_IsOpen) {
-        this->Clear({255, 255, 255, 1.f});
+        this->Clear(m_ClearColor);
         fun();
         this->Display();
         glfwWaitEvents();

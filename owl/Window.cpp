@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-
+#include <iostream>
 #include "Window.hpp"
 
 namespace owl {
@@ -25,7 +25,7 @@ Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-    if(style | WindowStyle::Maximized) {
+    if(style & WindowStyle::Maximized) {
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
     }
 
@@ -190,6 +190,10 @@ void Window::WindowVisible(bool visible) {
 void Window::SetTitle(std::string_view newTitle) {
     m_WindowTitle = newTitle;
     glfwSetWindowTitle(m_GLFWWindow.get(), newTitle.data());
+}
+
+void Window::SetClearColor(color::RBG clearColor) {
+    m_ClearColor = clearColor;
 }
 
 void Window::Clear(color::RBG color) const {
