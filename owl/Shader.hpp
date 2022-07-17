@@ -54,8 +54,6 @@ public:
 public:
     void Create(std::initializer_list<ShaderInfo> shaderInfos, ShaderFrom shaderFrom = ShaderFrom::File);
     void Use() const;
-    template <typename... T>
-    void SetVertexAttributes(T...);
 
 private:
     void DeleteShaders(const std::vector<unsigned>& shaders) const;
@@ -63,14 +61,6 @@ private:
 private:
     unsigned m_ProgramId;
 };
-
-template <typename... T>
-void Shader::SetVertexAttributes(T... attributes) {
-    ([&] {
-        bool normalized = std::is_integral_v<decltype(attributes.GetType())>;
-        std::cout << normalized << std::endl;
-    }(), ...);
-}
 
 }
 
