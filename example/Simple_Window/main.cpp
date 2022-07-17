@@ -1,8 +1,8 @@
-#include "../owl/Window.hpp"
-#include "../owl/Shader.hpp"
-#include "../owl/Color.hpp"
+#include "../../owl/Window.hpp"
+#include "../../owl/Shader.hpp"
+#include "../../owl/Color.hpp"
 
-#include <glad/glad.h>
+#include "glad/glad.h"
 
 std::vector<float> vertices = {
         -0.5f, -0.5f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f,

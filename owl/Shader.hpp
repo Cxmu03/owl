@@ -7,8 +7,6 @@
 
 #include <glad/glad.h>
 
-#include "VertexAttribute.hpp"
-
 namespace owl {
 
 constexpr static const char* s_DefaultVertexShader =
