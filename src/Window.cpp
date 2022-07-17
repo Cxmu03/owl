@@ -1,5 +1,4 @@
 #include <glad/glad.h>
-#include <iostream>
 #include "../include/owl/Window.hpp"
 
 namespace owl {
@@ -13,7 +12,7 @@ bool Window::KeyDown(int key) const {
     return glfwGetKey(m_GLFWWindow.get(), key) == GLFW_PRESS;
 }
 
-Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/) : m_ViewportSize(size), m_WindowTitle(title) {
+Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/) : m_ViewportSize(size), m_WindowTitle(title), m_ClearColor(255, 255, 255) {
     static bool glfwIsInitialized;
     static bool gladIsInitialized;
 
