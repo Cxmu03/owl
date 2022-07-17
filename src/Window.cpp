@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <iostream>
-#include "Window.hpp"
+#include "../include/owl/Window.hpp"
 
 namespace owl {
 

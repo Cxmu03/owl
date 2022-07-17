@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "Color.hpp"
+#include "../include/owl/Color.hpp"
 #include "Util.hpp"
 
 namespace owl::color {

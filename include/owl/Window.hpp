@@ -5,7 +5,7 @@
 #include <string_view>
 #include <functional>
 
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 #include "Color.hpp"
 #include "Vec2.hpp"

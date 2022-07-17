@@ -11,8 +11,8 @@ add_definitions(-DGLFW_INCLUDE_NONE)
 
 include_directories(vendor/glad/include)
 include_directories(vendor/glfw/include)
-include_directories(src)
+include_directories(include)
 
-add_library(owl SHARED owl/Window.hpp owl/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c owl/Color.hpp owl/Color.cpp owl/Util.hpp owl/Vec2.hpp owl/Shader.hpp owl/Shader.cpp owl/owl.hpp)
+add_library(owl SHARED include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp src/Util.hpp include/owl/Vec2.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp)
 
 target_link_libraries(owl glfw)
