@@ -1,5 +1,4 @@
-#ifndef OWL_VEC2_HPP
-#define OWL_VEC2_HPP
+#pragma once
 
 #include <cmath>
 
@@ -101,5 +100,3 @@ using Vec2d = Vec2<double>;
 using Vec2u = Vec2<size_t>;
 
 }
-
-#endif //OWL_VEC2_HPP

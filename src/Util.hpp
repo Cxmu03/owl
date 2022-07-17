@@ -1,5 +1,4 @@
-#ifndef OWL_UTIL_HPP
-#define OWL_UTIL_HPP
+#pragma once
 
 #include <string>
 #include <string_view>
@@ -24,5 +23,3 @@ static inline std::string ReadFromFile(std::string_view path) {
 }
 
 }
-
-#endif //OWL_UTIL_HPP

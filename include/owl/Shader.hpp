@@ -1,5 +1,4 @@
-#ifndef OWL_SHADER_HPP
-#define OWL_SHADER_HPP
+#pragma once
 
 #include <string_view>
 #include <string>
@@ -61,5 +60,3 @@ private:
 };
 
 }
-
-#endif //OWL_SHADER_HPP

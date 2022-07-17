@@ -1,5 +1,4 @@
-#ifndef OWL_WINDOW_HPP
-#define OWL_WINDOW_HPP
+#pragma once
 
 #include <memory>
 #include <string_view>
@@ -108,5 +107,3 @@ void Window::RunRaw(UpdateFunc fun) {
 }
 
 }
-
-#endif //OWL_WINDOW_HPP

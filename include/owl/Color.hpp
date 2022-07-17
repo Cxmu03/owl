@@ -1,5 +1,4 @@
-#ifndef OWL_COLOR_HPP
-#define OWL_COLOR_HPP
+#pragma once
 
 #include <stdint.h>
 
@@ -52,5 +51,3 @@ struct HSV {
 };
 
 }
-
-#endif //OWL_COLOR_HPP
