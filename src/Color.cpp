@@ -5,7 +5,7 @@
 
 namespace owl::color {
 
-NormalizedRGB RBG::ToNormalizedRGB() const {
+RGB::operator NormalizedRGB() const {
     return {
             util::MapToRange(static_cast<float>(r), 0.f, 255.f, 0.f, 1.f),
             util::MapToRange(static_cast<float>(g), 0.f, 255.f, 0.f, 1.f),
@@ -14,9 +14,9 @@ NormalizedRGB RBG::ToNormalizedRGB() const {
     };
 }
 
-HSV RBG::ToHSV() const {
+RGB::operator HSV() const {
     HSV         out = {0.f, 0.f, 0.f};
-    NormalizedRGB normalized = ToNormalizedRGB();
+    auto normalized = NormalizedRGB(*this);
     double      min, max, delta;
 
     min = normalized.r < normalized.g ? normalized.r : normalized.g;
@@ -58,7 +58,7 @@ HSV RBG::ToHSV() const {
     return out;
 }
 
-RBG NormalizedRGB::ToRBG() const {
+NormalizedRGB::operator RGB() const {
     return {
             static_cast<uint8_t>(util::MapToRange(r, 0.f, 1.f, 0.f, 255.f)),
             static_cast<uint8_t>(util::MapToRange(g, 0.f, 1.f, 0.f, 255.f)),
@@ -67,15 +67,15 @@ RBG NormalizedRGB::ToRBG() const {
     };
 }
 
-HSV NormalizedRGB::ToHSV() const {
-    return ToRBG().ToHSV();
+NormalizedRGB::operator HSV() const {
+    return HSV(RGB(*this));
 }
 
-RBG HSV::ToRGB() const {
-    return ToNormalizedRGB().ToRBG();
+HSV::operator RGB() const {
+    return RGB(NormalizedRGB(*this));
 }
 
-NormalizedRGB HSV::ToNormalizedRGB() const {
+HSV::operator NormalizedRGB() const {
     NormalizedRGB RGB;
     float H = h, S = s, V = v,
             P, Q, T,
@@ -89,19 +89,19 @@ NormalizedRGB HSV::ToNormalizedRGB() const {
     T = V*(1.f - S*(1.f - fract));
 
     if      (0. <= H && H < 1.)
-        RGB = {.r = V, .g = T, .b = P};
+        RGB = NormalizedRGB(V, T, P);
     else if (1. <= H && H < 2.)
-        RGB = {.r = Q, .g = V, .b = P};
+        RGB = NormalizedRGB(Q, V, P);
     else if (2. <= H && H < 3.)
-        RGB = {.r = P, .g = V, .b = T};
+        RGB = NormalizedRGB(P, V, T);
     else if (3. <= H && H < 4.)
-        RGB = {.r = P, .g = Q, .b = V};
+        RGB = NormalizedRGB(P, Q, V);
     else if (4. <= H && H < 5.)
-        RGB = {.r = T, .g = P, .b = V};
+        RGB = NormalizedRGB(T, P, V);
     else if (5. <= H && H < 6.)
-        RGB = {.r = V, .g = P, .b = Q};
+        RGB = NormalizedRGB(V, P, Q);
     else
-        RGB = {.r = 0., .g = 0., .b = 0.};
+        RGB = NormalizedRGB(0., 0., 0.);
 
     return RGB;
 }

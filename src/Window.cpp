@@ -192,12 +192,12 @@ void Window::SetTitle(std::string_view newTitle) {
     glfwSetWindowTitle(m_GLFWWindow.get(), newTitle.data());
 }
 
-void Window::SetClearColor(color::RBG clearColor) {
+void Window::SetClearColor(color::RGB clearColor) {
     m_ClearColor = clearColor;
 }
 
-void Window::Clear(color::RBG color) const {
-    color::NormalizedRGB glColor = color.ToNormalizedRGB();
+void Window::Clear(color::RGB color) const {
+    auto glColor = color::NormalizedRGB(color);
     glClearColor(glColor.r, glColor.g, glColor.b, glColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }

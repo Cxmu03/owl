@@ -51,7 +51,7 @@ public:
     void SetTitle(std::string_view);
     void SetSize(Size);
     void SetStyle(uint32_t);
-    void SetClearColor(color::RBG);
+    void SetClearColor(color::RGB);
     void ToggleFullscreen();
     void Maxmize();
     void Restore();
@@ -63,7 +63,7 @@ public:
 
     void Close();
 
-    void Clear(color::RBG) const;
+    void Clear(color::RGB) const;
     void Display() const;
 
 private:
@@ -81,7 +81,7 @@ private:
 private:
     std::unique_ptr<GLFWwindow, GlfwWindowDestructor> m_GLFWWindow;
     std::string_view m_WindowTitle;
-    color::RBG m_ClearColor;
+    color::RGB m_ClearColor;
     Size m_ViewportSize;
     Size m_WindowSizeBuffer;
     Vec2u m_WindowPos;

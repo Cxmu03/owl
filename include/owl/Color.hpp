@@ -8,14 +8,19 @@ namespace owl::color {
 struct NormalizedRGB;
 struct HSV;
 
-struct RBG {
+struct RGB {
     uint8_t r;
     uint8_t g;
     uint8_t b;
     float a;
 
-    [[nodiscard]] NormalizedRGB ToNormalizedRGB() const;
-    [[nodiscard]] HSV ToHSV() const;
+    RGB() = default;
+    RGB(const RGB& other) = default;
+    RGB(uint8_t pr, uint8_t pg, uint8_t pb) : RGB(pr, pg, pb, 1.f) {}
+    RGB(uint8_t r, uint8_t g, uint8_t b, float a) : r(r), g(g), b(b), a(1.f) {}
+
+    [[nodiscard]] operator NormalizedRGB() const;
+    [[nodiscard]] operator HSV() const;
 };
 
 struct NormalizedRGB {
@@ -24,8 +29,13 @@ struct NormalizedRGB {
     float b;
     float a;
 
-    [[nodiscard]] RBG ToRBG() const;
-    [[nodiscard]] HSV ToHSV() const;
+    NormalizedRGB() = default;
+    NormalizedRGB(const NormalizedRGB& other) = default;
+    NormalizedRGB(float pr, float pg, float pb) : NormalizedRGB(pr, pg, pb, 1.f) {}
+    NormalizedRGB(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
+
+    [[nodiscard]] operator RGB() const;
+    [[nodiscard]] operator HSV() const;
 };
 
 struct HSV {
@@ -33,8 +43,12 @@ struct HSV {
     float s;
     float v;
 
-    [[nodiscard]] RBG ToRGB() const;
-    [[nodiscard]] NormalizedRGB ToNormalizedRGB() const;
+    HSV() = default;
+    HSV(const HSV& other) = default;
+    HSV(float h, float s, float v) : h(h), s(s), v(v) {}
+
+    [[nodiscard]] operator RGB() const;
+    [[nodiscard]] operator NormalizedRGB() const;
 };
 
 }
