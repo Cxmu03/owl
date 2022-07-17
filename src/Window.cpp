@@ -57,6 +57,7 @@ Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/)
         thisWindow.m_IsFocused = focused;
         if(focused) {
             thisWindow.UpdateViewport();
+            glfwMakeContextCurrent(thisWindow.m_GLFWWindow.get());
         }
     });
 
