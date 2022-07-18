@@ -9,10 +9,13 @@ option(BUILD_SHARED_LIBRARIES ON)
 add_subdirectory(vendor/glfw)
 add_definitions(-DGLFW_INCLUDE_NONE)
 
+add_subdirectory(vendor/glm)
+
 include_directories(vendor/glad/include)
 include_directories(vendor/glfw/include)
+include_directories(vendor/glm)
 include_directories(include)
 
-add_library(owl SHARED include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp src/Util.hpp include/owl/Vec2.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp)
+add_library(owl SHARED include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp src/Util.hpp include/owl/Vec2.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp include/owl/Vec3.hpp)
 
 target_link_libraries(owl glfw)

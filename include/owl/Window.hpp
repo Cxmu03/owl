@@ -5,9 +5,9 @@
 #include <functional>
 
 #include "GLFW/glfw3.h"
+#include <glm/vec2.hpp>
 
 #include "Color.hpp"
-#include "Vec2.hpp"
 
 namespace owl {
 
@@ -83,7 +83,7 @@ private:
     color::RGB m_ClearColor;
     Size m_ViewportSize;
     Size m_WindowSizeBuffer;
-    Vec2u m_WindowPos;
+    glm::vec<2, size_t> m_WindowPos;
     bool m_IsOpen;
     bool m_IsFocused;
     uint32_t m_CurrentStyle;
