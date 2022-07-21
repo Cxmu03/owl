@@ -16,6 +16,6 @@ include_directories(vendor/glfw/include)
 include_directories(vendor/glm)
 include_directories(include)
 
-add_library(owl SHARED include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp src/Util.hpp include/owl/Vec2.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp include/owl/Vec3.hpp)
+add_library(owl SHARED include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp src/Util.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp)
 
 target_link_libraries(owl glfw)
