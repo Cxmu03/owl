@@ -5,7 +5,7 @@
 
 namespace owl::color {
 
-RGB::operator NormalizedRGB() const {
+RGB::operator GLRGB() const {
     return {
             util::MapToRange(static_cast<float>(r), 0.f, 255.f, 0.f, 1.f),
             util::MapToRange(static_cast<float>(g), 0.f, 255.f, 0.f, 1.f),
@@ -16,7 +16,7 @@ RGB::operator NormalizedRGB() const {
 
 RGB::operator HSV() const {
     HSV         out = {0.f, 0.f, 0.f};
-    auto normalized = NormalizedRGB(*this);
+    auto normalized = GLRGB(*this);
     double      min, max, delta;
 
     min = normalized.r < normalized.g ? normalized.r : normalized.g;
@@ -58,7 +58,7 @@ RGB::operator HSV() const {
     return out;
 }
 
-NormalizedRGB::operator RGB() const {
+GLRGB::operator RGB() const {
     return {
             static_cast<uint8_t>(util::MapToRange(r, 0.f, 1.f, 0.f, 255.f)),
             static_cast<uint8_t>(util::MapToRange(g, 0.f, 1.f, 0.f, 255.f)),
@@ -67,16 +67,16 @@ NormalizedRGB::operator RGB() const {
     };
 }
 
-NormalizedRGB::operator HSV() const {
+GLRGB::operator HSV() const {
     return HSV(RGB(*this));
 }
 
 HSV::operator RGB() const {
-    return RGB(NormalizedRGB(*this));
+    return RGB(GLRGB(*this));
 }
 
-HSV::operator NormalizedRGB() const {
-    NormalizedRGB RGB;
+HSV::operator GLRGB() const {
+    GLRGB RGB;
     float H = h, S = s, V = v,
             P, Q, T,
             fract;
@@ -89,19 +89,19 @@ HSV::operator NormalizedRGB() const {
     T = V*(1.f - S*(1.f - fract));
 
     if      (0. <= H && H < 1.)
-        RGB = NormalizedRGB(V, T, P);
+        RGB = GLRGB(V, T, P);
     else if (1. <= H && H < 2.)
-        RGB = NormalizedRGB(Q, V, P);
+        RGB = GLRGB(Q, V, P);
     else if (2. <= H && H < 3.)
-        RGB = NormalizedRGB(P, V, T);
+        RGB = GLRGB(P, V, T);
     else if (3. <= H && H < 4.)
-        RGB = NormalizedRGB(P, Q, V);
+        RGB = GLRGB(P, Q, V);
     else if (4. <= H && H < 5.)
-        RGB = NormalizedRGB(T, P, V);
+        RGB = GLRGB(T, P, V);
     else if (5. <= H && H < 6.)
-        RGB = NormalizedRGB(V, P, Q);
+        RGB = GLRGB(V, P, Q);
     else
-        RGB = NormalizedRGB(0., 0., 0.);
+        RGB = GLRGB(0., 0., 0.);
 
     return RGB;
 }

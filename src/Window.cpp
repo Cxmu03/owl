@@ -197,7 +197,7 @@ void Window::SetClearColor(color::RGB clearColor) {
 }
 
 void Window::Clear(color::RGB color) const {
-    auto glColor = color::NormalizedRGB(color);
+    auto glColor = color::GLRGB(color);
     glClearColor(glColor.r, glColor.g, glColor.b, glColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
