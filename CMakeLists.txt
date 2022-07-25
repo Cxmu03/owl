@@ -11,11 +11,11 @@ add_definitions(-DGLFW_INCLUDE_NONE)
 
 add_subdirectory(vendor/glm)
 
-include_directories(vendor/glad/include)
-include_directories(vendor/glfw/include)
-include_directories(vendor/glm)
-include_directories(include)
+add_library(owl STATIC include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp src/Util.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp)
 
-add_library(owl SHARED include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp src/Util.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp)
+target_include_directories(owl PUBLIC vendor/glad/include)
+target_include_directories(owl PUBLIC vendor/glfw/include)
+target_include_directories(owl PUBLIC vendor/glm)
+target_include_directories(owl PUBLIC include)
 
 target_link_libraries(owl glfw)
