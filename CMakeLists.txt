@@ -16,6 +16,6 @@ add_library(owl STATIC include/owl/Window.hpp src/Window.cpp vendor/glad/include
 target_include_directories(owl PUBLIC vendor/glad/include)
 target_include_directories(owl PUBLIC vendor/glfw/include)
 target_include_directories(owl PUBLIC vendor/glm)
-target_include_directories(owl PUBLIC include)
+target_include_directories(owl PUBLIC include/owl)
 
 target_link_libraries(owl glfw)

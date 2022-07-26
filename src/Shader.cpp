@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../include/owl/Shader.hpp"
+#include <Shader.hpp>
 #include "Util.hpp"
 
 struct ShaderSourceHelper {
