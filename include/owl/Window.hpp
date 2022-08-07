@@ -4,11 +4,14 @@
 #include <string_view>
 #include <functional>
 
+#ifndef GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_NONE
+#endif
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
 #include "Color.hpp"
+#include "FpsUtils.hpp"
 
 namespace owl {
 
@@ -17,6 +20,11 @@ struct Size {
     size_t height;
 
     static Size PrimaryMonitorSize();
+};
+
+enum VsyncStatus {
+    On = 0,
+    Off
 };
 
 enum WindowStyle {
@@ -47,11 +55,15 @@ public:
     [[nodiscard]] bool KeyDown(int) const;
     [[nodiscard]] Size GetSize() const;
     [[nodiscard]] Size GetPosition() const;
+    [[nodiscard]] double GetDeltaTime() const;
 
     void SetTitle(std::string_view);
     void SetSize(Size);
     void SetStyle(uint32_t);
     void SetClearColor(color::RGB);
+    void SetVsync(VsyncStatus);
+    void SetFramerateLimit(size_t);
+    void Wait();
     void ToggleFullscreen();
     void Maxmize();
     void Restore();
@@ -68,8 +80,6 @@ public:
 
 private:
     void UpdateViewport();
-    void PushState();
-    void PopState();
 
 private:
     struct GlfwWindowDestructor {
@@ -87,22 +97,27 @@ private:
     glm::vec<2, size_t> m_WindowPos;
     bool m_IsOpen;
     bool m_IsFocused;
+    double m_DeltaTime;
+    FramerateLimiter limiter;
     uint32_t m_CurrentStyle;
 };
 
 template<typename UpdateFunc>
 void Window::Run(UpdateFunc fun) {
     while (this->m_IsOpen) {
+        this->Wait();
         this->Clear(m_ClearColor);
         fun();
         this->Display();
-        glfwWaitEvents();
+        glfwPollEvents();
     }
 }
 
 template<typename UpdateFunc>
 void Window::RunRaw(UpdateFunc fun) {
     while (this->m_IsOpen) {
+        this->Wait();
+        m_DeltaTime = limiter.NextFrame();
         fun();
     }
 }

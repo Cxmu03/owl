@@ -33,6 +33,7 @@ Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/)
     m_GLFWWindow = std::unique_ptr<GLFWwindow, GlfwWindowDestructor>(window);
     glfwSetWindowUserPointer(window, this);
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0);
 
     glfwSetWindowTitle(window, m_WindowTitle.data());
 
@@ -97,6 +98,10 @@ Size Window::GetPosition() const {
     int xPos, yPos;
     glfwGetWindowPos(m_GLFWWindow.get(), &xPos, &yPos);
     return { (size_t) xPos, (size_t) yPos };
+}
+
+double Window::GetDeltaTime() const {
+    return m_DeltaTime;
 }
 
 void Window::Focus() {
@@ -195,6 +200,22 @@ void Window::SetTitle(std::string_view newTitle) {
 
 void Window::SetClearColor(color::RGB clearColor) {
     m_ClearColor = clearColor;
+}
+
+void Window::SetVsync(VsyncStatus status) {
+    limiter.enabled = status == VsyncStatus::Off;
+    GLFWwindow* oldContext = glfwGetCurrentContext(); //Makes sure old context is restored in the use case of multiple windows
+    glfwMakeContextCurrent(m_GLFWWindow.get());
+    glfwSwapInterval(status == owl::On);
+    glfwMakeContextCurrent(oldContext);
+}
+
+void Window::SetFramerateLimit(size_t limit) {
+    limiter.SetLimit(limit);
+}
+
+void Window::Wait() {
+    m_DeltaTime = limiter.NextFrame();
 }
 
 void Window::Clear(color::RGB color) const {
