@@ -4,9 +4,6 @@
 #include <string_view>
 #include <functional>
 
-#ifndef GLFW_INCLUDE_NONE
-#define GLFW_INCLUDE_NONE
-#endif
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
@@ -63,7 +60,6 @@ public:
     void SetClearColor(color::RGB);
     void SetVsync(VsyncStatus);
     void SetFramerateLimit(size_t);
-    void Wait();
     void ToggleFullscreen();
     void Maxmize();
     void Restore();
@@ -75,6 +71,7 @@ public:
 
     void Close();
 
+    void Clear() const;
     void Clear(color::RGB) const;
     void Display() const;
 
@@ -91,7 +88,7 @@ private:
 private:
     std::unique_ptr<GLFWwindow, GlfwWindowDestructor> m_GLFWWindow;
     std::string_view m_WindowTitle;
-    color::RGB m_ClearColor;
+    color::GLRGB m_ClearColor;
     Size m_ViewportSize;
     Size m_WindowSizeBuffer;
     glm::vec<2, size_t> m_WindowPos;
@@ -105,7 +102,8 @@ private:
 template<typename UpdateFunc>
 void Window::Run(UpdateFunc fun) {
     while (this->m_IsOpen) {
-        this->Wait();
+        m_DeltaTime = limiter.NextFrame();
+        this->Clear();
         this->Clear(m_ClearColor);
         fun();
         this->Display();
@@ -116,7 +114,6 @@ void Window::Run(UpdateFunc fun) {
 template<typename UpdateFunc>
 void Window::RunRaw(UpdateFunc fun) {
     while (this->m_IsOpen) {
-        this->Wait();
         m_DeltaTime = limiter.NextFrame();
         fun();
     }

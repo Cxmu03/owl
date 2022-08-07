@@ -214,13 +214,14 @@ void Window::SetFramerateLimit(size_t limit) {
     limiter.SetLimit(limit);
 }
 
-void Window::Wait() {
-    m_DeltaTime = limiter.NextFrame();
-}
-
 void Window::Clear(color::RGB color) const {
     auto glColor = color::GLRGB(color);
     glClearColor(glColor.r, glColor.g, glColor.b, glColor.a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Window::Clear() const {
+    glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
