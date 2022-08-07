@@ -136,7 +136,7 @@ void Window::ToggleFullscreen() {
     UpdateViewport();
 }
 
-void Window::Maxmize() {
+void Window::Maximize() {
     if(IsMaximized()) {
         return;
     }

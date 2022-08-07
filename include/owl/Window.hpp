@@ -61,7 +61,7 @@ public:
     void SetVsync(VsyncStatus);
     void SetFramerateLimit(size_t);
     void ToggleFullscreen();
-    void Maxmize();
+    void Maximize();
     void Restore();
     void WindowVisible(bool);
     void SetPosition(Size);
