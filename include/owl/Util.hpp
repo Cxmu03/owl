@@ -25,12 +25,12 @@ static inline std::string ReadFromFile(std::string_view path) {
 
 template <typename T>
 static constexpr inline T DegToRad(T deg) {
-
+    return (static_cast<double>(deg) * std::numbers::pi) / 180.;
 }
 
 template <typename T>
 static constexpr inline T RadToDeg(T deg) {
-
+    return (static_cast<double>(deg) * 180.) / std::numbers::pi;
 }
 
 }
