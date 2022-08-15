@@ -34,6 +34,7 @@ using vec3i = vec3<int>;
 using vec3l = vec3<long>;
 using vec3ll = vec3<long long>;
 using vec3c = vec3<char>;
+using vec3u = vec3<unsigned>;
 
 template<typename T>
 auto vec3<T>::SqrAbs() -> T {
