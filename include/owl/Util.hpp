@@ -4,6 +4,7 @@
 #include <string_view>
 #include <fstream>
 #include <sstream>
+#include <numeric>
 
 namespace owl::util {
 
@@ -20,6 +21,16 @@ static inline std::string ReadFromFile(std::string_view path) {
     stringStream << fileStream.rdbuf();
     std::string fileContents = stringStream.str();
     return fileContents;
+}
+
+template <typename T>
+static constexpr inline T DegToRad(T deg) {
+
+}
+
+template <typename T>
+static constexpr inline T RadToDeg(T deg) {
+
 }
 
 }
