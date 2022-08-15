@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 #include <Shader.hpp>
-#include "Util.hpp"
+#include <Util.hpp>
 
 struct ShaderSourceHelper {
     const char* data;
