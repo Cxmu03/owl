@@ -38,9 +38,9 @@ struct ShaderInfo {
     std::string content;
 };
 
-ShaderInfo GeometryShader(std::string content);
-ShaderInfo VertexShader(std::string content);
-ShaderInfo FragmentShader(std::string content);
+auto GeometryShader(std::string content) -> ShaderInfo;
+auto VertexShader(std::string content) -> ShaderInfo;
+auto FragmentShader(std::string content) -> ShaderInfo;
 
 class Shader {
 public:
@@ -50,11 +50,11 @@ public:
     ~Shader();
 
 public:
-    void Create(std::initializer_list<ShaderInfo> shaderInfos, ShaderFrom shaderFrom = ShaderFrom::File);
-    void Use() const;
+    auto Create(std::initializer_list<ShaderInfo> shaderInfos, ShaderFrom shaderFrom = ShaderFrom::File) -> void;
+    auto Use() const -> void;
 
 private:
-    void DeleteShaders(const std::vector<unsigned>& shaders) const;
+    auto DeleteShaders(const std::vector<unsigned>& shaders) const -> void;
 
 private:
     unsigned m_ProgramId;

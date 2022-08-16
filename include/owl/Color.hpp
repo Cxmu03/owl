@@ -23,11 +23,11 @@ struct RGB {
     [[nodiscard]] operator GLRGB() const;
     [[nodiscard]] operator HSV() const;
 
-    static inline const RGB Black() { return {0,   0,   0  }; }
-    static inline const RGB White() { return {255, 255, 255}; }
-    static inline const RGB Red  () { return {255, 0,   0  }; }
-    static inline const RGB Green() { return {0,   255, 0  }; }
-    static inline const RGB Blue () { return {0,   0,   255}; }
+    static inline auto Black() -> RGB { return {0,   0,   0  }; }
+    static inline auto White() -> RGB { return {255, 255, 255}; }
+    static inline auto Red  () -> RGB { return {255, 0,   0  }; }
+    static inline auto Green() -> RGB { return {0,   255, 0  }; }
+    static inline auto Blue () -> RGB { return {0,   0,   255}; }
 };
 
 struct GLRGB {
@@ -44,11 +44,11 @@ struct GLRGB {
     [[nodiscard]] operator RGB() const;
     [[nodiscard]] operator HSV() const;
 
-    static inline const GLRGB Black() { return {0.f, 0.f, 0.f}; }
-    static inline const GLRGB White() { return {1.f, 1.f, 1.f}; }
-    static inline const GLRGB Red  () { return {1.f, 0.f, 0.f}; }
-    static inline const GLRGB Green() { return {0.f, 1.f, 0.f}; }
-    static inline const GLRGB Blue () { return {0.f, 0.f, 1.f}; }
+    static inline auto Black() -> GLRGB { return {0.f, 0.f, 0.f}; }
+    static inline auto White() -> GLRGB { return {1.f, 1.f, 1.f}; }
+    static inline auto Red  () -> GLRGB { return {1.f, 0.f, 0.f}; }
+    static inline auto Green() -> GLRGB { return {0.f, 1.f, 0.f}; }
+    static inline auto Blue () -> GLRGB { return {0.f, 0.f, 1.f}; }
 };
 
 struct HSV {
@@ -63,17 +63,11 @@ struct HSV {
     [[nodiscard]] operator RGB() const;
     [[nodiscard]] operator GLRGB() const;
 
-    static inline const HSV Black() { return {0.f, 0.f, 0.f}; }
-    static inline const HSV White() { return {0.f, 0.f, 1.f}; }
-    static inline const HSV Red  () { return {0.f, 1.f, 1.f}; }
-    static inline const HSV Green() { return {util::DegToRad(120), 1.f, 1.f}; }
-    static inline const HSV Blue () { return {util::DegToRad(240), 0.f, 1.f}; }
+    static inline auto Black() -> HSV { return {0.f, 0.f, 0.f}; }
+    static inline auto White() -> HSV { return {0.f, 0.f, 1.f}; }
+    static inline auto Red  () -> HSV { return {0.f, 1.f, 1.f}; }
+    static inline auto Green() -> HSV { return {util::DegToRad(120), 1.f, 1.f}; }
+    static inline auto Blue () -> HSV { return {util::DegToRad(240), 0.f, 1.f}; }
 };
-
-inline const RGB black(0, 0, 0);
-inline const RGB white(255, 255, 255);
-inline const RGB red(255, 0, 0);
-inline const RGB green(0, 255, 0);
-inline const RGB blue(0, 0, 255);
 
 }

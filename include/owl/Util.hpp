@@ -9,13 +9,13 @@
 namespace owl::util {
 
 template<typename T>
-static constexpr inline T
-MapToRange(T value, T valueRangeStart, T valueRangeEnd, T resultRangeStart, T resultRangeEnd) {
+static constexpr inline auto
+MapToRange(T value, T valueRangeStart, T valueRangeEnd, T resultRangeStart, T resultRangeEnd) -> T {
     return resultRangeStart +
            (((value - valueRangeStart) / (valueRangeEnd - valueRangeStart)) * (resultRangeEnd - resultRangeStart));
 }
 
-static inline std::string ReadFromFile(std::string_view path) {
+static inline auto ReadFromFile(std::string_view path) -> std::string {
     std::ifstream fileStream(path.data());
     std::stringstream stringStream;
     stringStream << fileStream.rdbuf();
@@ -24,12 +24,12 @@ static inline std::string ReadFromFile(std::string_view path) {
 }
 
 template <typename T>
-static constexpr inline T DegToRad(T deg) {
+static constexpr inline auto DegToRad(T deg) -> T {
     return (static_cast<double>(deg) * std::numbers::pi) / 180.;
 }
 
 template <typename T>
-static constexpr inline T RadToDeg(T deg) {
+static constexpr inline auto RadToDeg(T deg) -> T {
     return (static_cast<double>(deg) * 180.) / std::numbers::pi;
 }
 

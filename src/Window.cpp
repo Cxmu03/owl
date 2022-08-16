@@ -4,15 +4,6 @@
 
 namespace owl {
 
-Size Size::PrimaryMonitorSize() {
-    const GLFWvidmode* primaryVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    return { (size_t) primaryVideoMode->width, (size_t) primaryVideoMode->height };
-}
-
-bool Window::KeyDown(int key) const {
-    return glfwGetKey(m_GLFWWindow.get(), key) == GLFW_PRESS;
-}
-
 Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/) : m_ViewportSize(size), m_WindowTitle(title), m_ClearColor(255, 255, 255) {
     static bool glfwIsInitialized;
     static bool gladIsInitialized;
@@ -69,60 +60,69 @@ Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/)
     m_IsOpen = true;
 }
 
-void Window::UpdateViewport() {
+auto Size::PrimaryMonitorSize() -> Size {
+    const GLFWvidmode* primaryVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    return { (size_t) primaryVideoMode->width, (size_t) primaryVideoMode->height };
+}
+
+auto Window::KeyDown(int key) const -> bool {
+    return glfwGetKey(m_GLFWWindow.get(), key) == GLFW_PRESS;
+}
+
+auto Window::UpdateViewport() -> void {
     glfwGetFramebufferSize(m_GLFWWindow.get(), (int*)&m_ViewportSize.width, (int*)&m_ViewportSize.height);
     glViewport(0, 0, m_ViewportSize.width, m_ViewportSize.height);
 }
 
-bool Window::IsOpen() const {
+auto Window::IsOpen() const -> bool{
     return m_IsOpen;
 }
 
-bool Window::IsFocused() const {
+auto Window::IsFocused() const -> bool {
     return m_IsFocused;
 }
 
-bool Window::IsFullscreen() const {
+auto Window::IsFullscreen() const -> bool {
     return glfwGetWindowMonitor(m_GLFWWindow.get()) != nullptr;
 }
 
-bool Window::IsMaximized() const {
+auto Window::IsMaximized() const -> bool {
     return glfwGetWindowAttrib(m_GLFWWindow.get(), GLFW_MAXIMIZED);
 }
 
-Size Window::GetSize() const {
+auto Window::GetSize() const -> Size {
     return m_ViewportSize;
 }
 
-Size Window::GetPosition() const {
+auto Window::GetPosition() const -> Size {
     int xPos, yPos;
     glfwGetWindowPos(m_GLFWWindow.get(), &xPos, &yPos);
     return { (size_t) xPos, (size_t) yPos };
 }
 
-double Window::GetDeltaTime() const {
+auto Window::GetDeltaTime() const -> double {
     return m_DeltaTime;
 }
 
-void Window::Focus() {
+auto Window::Focus() -> void {
     glfwFocusWindow(m_GLFWWindow.get());
 }
 
-void Window::RequestFocus() {
+auto Window::RequestFocus() -> void {
     glfwRequestWindowAttention(m_GLFWWindow.get());
 }
 
-void Window::Close() {
+auto Window::Close() -> void {
     m_IsOpen = false;
 }
 
-void Window::SetSize(Size newSize) {
+auto Window::SetSize(Size newSize) -> void {
     glViewport(0, 0, newSize.width, newSize.height);
     m_ViewportSize = newSize;
     m_ViewportSize = newSize;
 }
 
-void Window::ToggleFullscreen() {
+auto Window::ToggleFullscreen() -> void {
     if(IsFullscreen()) {
         glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_WindowSizeBuffer.width, m_WindowSizeBuffer.height, GLFW_DONT_CARE);
         UpdateViewport();
@@ -136,7 +136,7 @@ void Window::ToggleFullscreen() {
     UpdateViewport();
 }
 
-void Window::Maximize() {
+auto Window::Maximize() -> void {
     if(IsMaximized()) {
         return;
     }
@@ -144,7 +144,7 @@ void Window::Maximize() {
     UpdateViewport();
 }
 
-void Window::Restore() {
+auto Window::Restore() -> void {
     if(IsMaximized()) {
         glfwRestoreWindow(m_GLFWWindow.get());
         UpdateViewport();
@@ -154,7 +154,7 @@ void Window::Restore() {
     }
 }
 
-void Window::SetStyle(uint32_t style) {
+auto Window::SetStyle(uint32_t style) -> void {
     m_CurrentStyle = style;
 
     if((!IsFullscreen() && (style & WindowStyle::Fullscreen)) || (IsFullscreen() && !(style & WindowStyle::Fullscreen))) {
@@ -181,28 +181,28 @@ void Window::SetStyle(uint32_t style) {
     }
 }
 
-void Window::SetPosition(Size newPos) {
+auto Window::SetPosition(Size newPos) -> void {
     glfwSetWindowPos(m_GLFWWindow.get(), newPos.width, newPos.height);
 }
 
-void Window::MouseCursorVisible(bool visible) {
+auto Window::MouseCursorVisible(bool visible) -> void {
     glfwSetInputMode(m_GLFWWindow.get(), GLFW_CURSOR_HIDDEN, visible);
 }
 
-void Window::WindowVisible(bool visible) {
+auto Window::WindowVisible(bool visible) -> void {
     glfwSetWindowAttrib(m_GLFWWindow.get(), GLFW_VISIBLE, visible);
 }
 
-void Window::SetTitle(std::string_view newTitle) {
+auto Window::SetTitle(std::string_view newTitle) -> void {
     m_WindowTitle = newTitle;
     glfwSetWindowTitle(m_GLFWWindow.get(), newTitle.data());
 }
 
-void Window::SetClearColor(color::RGB clearColor) {
+auto Window::SetClearColor(color::RGB clearColor) -> void {
     m_ClearColor = clearColor;
 }
 
-void Window::SetVsync(VsyncStatus status) {
+auto Window::SetVsync(VsyncStatus status) -> void {
     limiter.enabled = status == VsyncStatus::Off;
     GLFWwindow* oldContext = glfwGetCurrentContext(); //Makes sure old context is restored in the use case of multiple windows
     glfwMakeContextCurrent(m_GLFWWindow.get());
@@ -210,22 +210,22 @@ void Window::SetVsync(VsyncStatus status) {
     glfwMakeContextCurrent(oldContext);
 }
 
-void Window::SetFramerateLimit(size_t limit) {
+auto Window::SetFramerateLimit(size_t limit) -> void {
     limiter.SetLimit(limit);
 }
 
-void Window::Clear(color::RGB color) const {
+auto Window::Clear(color::RGB color) const -> void {
     auto glColor = color::GLRGB(color);
     glClearColor(glColor.r, glColor.g, glColor.b, glColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Window::Clear() const {
+auto Window::Clear() const -> void {
     glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Window::Display() const {
+auto Window::Display() const -> void {
     glfwSwapBuffers(m_GLFWWindow.get());
 }
 

@@ -13,15 +13,15 @@ struct ShaderSourceHelper {
 
 namespace owl {
 
-ShaderInfo GeometryShader(std::string content) {
+auto GeometryShader(std::string content) -> ShaderInfo {
     return { ShaderType::GeometryShader, std::move(content) };
 }
 
-ShaderInfo VertexShader(std::string content) {
+auto VertexShader(std::string content) -> ShaderInfo {
     return { ShaderType::VertexShader, std::move(content) };
 }
 
-ShaderInfo FragmentShader(std::string content) {
+auto FragmentShader(std::string content) -> ShaderInfo {
     return { ShaderType::FragmentShader, std::move(content) };
 }
 
@@ -31,7 +31,11 @@ Shader::Shader(std::initializer_list<ShaderInfo> shaderInfos, ShaderFrom shaderF
     Create(shaderInfos, shaderFrom);
 }
 
-void Shader::Create(std::initializer_list<ShaderInfo> shaderInfos, ShaderFrom shaderFrom /*= ShaderFrom::File */) {
+Shader::~Shader() {
+    glDeleteProgram(m_ProgramId);
+}
+
+auto Shader::Create(std::initializer_list<ShaderInfo> shaderInfos, ShaderFrom shaderFrom /*= ShaderFrom::File */) -> void {
     m_ProgramId = glCreateProgram();
     int success;
     int logLength;
@@ -73,18 +77,14 @@ void Shader::Create(std::initializer_list<ShaderInfo> shaderInfos, ShaderFrom sh
     DeleteShaders(shadersToDelete);
 }
 
-void Shader::Use() const {
+auto Shader::Use() const -> void {
     glUseProgram(m_ProgramId);
 }
 
-void Shader::DeleteShaders(const std::vector<unsigned int> &shaders) const {
+auto Shader::DeleteShaders(const std::vector<unsigned int> &shaders) const -> void {
     for(const auto shader : shaders) {
         glDetachShader(m_ProgramId, shader);
         glDeleteShader(shader);
     }
-}
-
-Shader::~Shader() {
-    glDeleteProgram(m_ProgramId);
 }
 }

@@ -16,7 +16,7 @@ struct Size {
     size_t width;
     size_t height;
 
-    static Size PrimaryMonitorSize();
+    static auto PrimaryMonitorSize() -> Size;
 };
 
 enum VsyncStatus {
@@ -40,47 +40,47 @@ public:
 
 public:
     template<typename UpdateFunc>
-    void Run(UpdateFunc fun);
+    auto Run(UpdateFunc fun) -> void;
 
     template<typename UpdateFunc>
-    void RunRaw(UpdateFunc fun);
+    auto RunRaw(UpdateFunc fun) -> void;
 
-    [[nodiscard]] bool IsOpen() const;
-    [[nodiscard]] bool IsFocused() const;
-    [[nodiscard]] bool IsFullscreen() const;
-    [[nodiscard]] bool IsMaximized() const;
-    [[nodiscard]] bool KeyDown(int) const;
-    [[nodiscard]] Size GetSize() const;
-    [[nodiscard]] Size GetPosition() const;
-    [[nodiscard]] double GetDeltaTime() const;
+    [[nodiscard]] auto IsOpen() const -> bool;
+    [[nodiscard]] auto IsFocused() const -> bool;
+    [[nodiscard]] auto IsFullscreen() const -> bool;
+    [[nodiscard]] auto IsMaximized() const -> bool;
+    [[nodiscard]] auto KeyDown(int) const -> bool;
+    [[nodiscard]] auto GetSize() const -> Size;
+    [[nodiscard]] auto GetPosition() const -> Size;
+    [[nodiscard]] auto GetDeltaTime() const -> double;
 
-    void SetTitle(std::string_view);
-    void SetSize(Size);
-    void SetStyle(uint32_t);
-    void SetClearColor(color::RGB);
-    void SetVsync(VsyncStatus);
-    void SetFramerateLimit(size_t);
-    void ToggleFullscreen();
-    void Maximize();
-    void Restore();
-    void WindowVisible(bool);
-    void SetPosition(Size);
-    void MouseCursorVisible(bool);
-    void Focus();
-    void RequestFocus();
+    auto SetTitle(std::string_view) -> void;
+    auto SetSize(Size) -> void;
+    auto SetStyle(uint32_t) -> void;
+    auto SetClearColor(color::RGB) -> void;
+    auto SetVsync(VsyncStatus) -> void;
+    auto SetFramerateLimit(size_t) -> void;
+    auto ToggleFullscreen() -> void;
+    auto Maximize() -> void;
+    auto Restore() -> void;
+    auto WindowVisible(bool) -> void;
+    auto SetPosition(Size) -> void;
+    auto MouseCursorVisible(bool) -> void;
+    auto Focus() -> void;
+    auto RequestFocus() -> void;
 
-    void Close();
+    auto Close() -> void;
 
-    void Clear() const;
-    void Clear(color::RGB) const;
-    void Display() const;
+    auto Clear() const -> void;
+    auto Clear(color::RGB) const -> void;
+    auto Display() const -> void;
 
 private:
-    void UpdateViewport();
+    auto UpdateViewport() -> void;
 
 private:
     struct GlfwWindowDestructor {
-        void operator()(GLFWwindow* window) {
+        auto operator()(GLFWwindow* window) -> void {
             glfwDestroyWindow(window);
         }
     };
@@ -100,7 +100,7 @@ private:
 };
 
 template<typename UpdateFunc>
-void Window::Run(UpdateFunc fun) {
+auto Window::Run(UpdateFunc fun) -> void {
     while (this->m_IsOpen) {
         m_DeltaTime = limiter.NextFrame();
         this->Clear();
@@ -112,7 +112,7 @@ void Window::Run(UpdateFunc fun) {
 }
 
 template<typename UpdateFunc>
-void Window::RunRaw(UpdateFunc fun) {
+auto Window::RunRaw(UpdateFunc fun) -> void {
     while (this->m_IsOpen) {
         m_DeltaTime = limiter.NextFrame();
         fun();
