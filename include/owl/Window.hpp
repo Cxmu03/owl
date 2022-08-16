@@ -5,19 +5,14 @@
 #include <functional>
 
 #include <GLFW/glfw3.h>
-#include <glm/vec2.hpp>
+#include <vec2.hpp>
 
 #include "Color.hpp"
 #include "FpsUtils.hpp"
 
 namespace owl {
 
-struct Size {
-    size_t width;
-    size_t height;
-
-    static auto PrimaryMonitorSize() -> Size;
-};
+static auto PrimaryMonitorSize() -> vec2u;
 
 enum VsyncStatus {
     On = 0,
@@ -36,7 +31,7 @@ enum WindowStyle {
 
 class Window {
 public:
-    Window(Size size, std::string_view title, uint32_t style = WindowStyle::Default);
+    Window(vec2u size, std::string_view title, uint32_t style = WindowStyle::Default);
 
 public:
     template<typename UpdateFunc>
@@ -50,12 +45,12 @@ public:
     [[nodiscard]] auto IsFullscreen() const -> bool;
     [[nodiscard]] auto IsMaximized() const -> bool;
     [[nodiscard]] auto KeyDown(int) const -> bool;
-    [[nodiscard]] auto GetSize() const -> Size;
-    [[nodiscard]] auto GetPosition() const -> Size;
+    [[nodiscard]] auto GetSize() const -> vec2u;
+    [[nodiscard]] auto GetPosition() const -> vec2u;
     [[nodiscard]] auto GetDeltaTime() const -> double;
 
     auto SetTitle(std::string_view) -> void;
-    auto SetSize(Size) -> void;
+    auto SetSize(vec2u) -> void;
     auto SetStyle(uint32_t) -> void;
     auto SetClearColor(color::RGB) -> void;
     auto SetVsync(VsyncStatus) -> void;
@@ -64,7 +59,7 @@ public:
     auto Maximize() -> void;
     auto Restore() -> void;
     auto WindowVisible(bool) -> void;
-    auto SetPosition(Size) -> void;
+    auto SetPosition(vec2u) -> void;
     auto MouseCursorVisible(bool) -> void;
     auto Focus() -> void;
     auto RequestFocus() -> void;
@@ -89,9 +84,9 @@ private:
     std::unique_ptr<GLFWwindow, GlfwWindowDestructor> m_GLFWWindow;
     std::string_view m_WindowTitle;
     color::GLRGB m_ClearColor;
-    Size m_ViewportSize;
-    Size m_WindowSizeBuffer;
-    glm::vec<2, size_t> m_WindowPos;
+    vec2u m_ViewportSize;
+    vec2u m_WindowSizeBuffer;
+    vec2u m_WindowPos;
     bool m_IsOpen;
     bool m_IsFocused;
     double m_DeltaTime;

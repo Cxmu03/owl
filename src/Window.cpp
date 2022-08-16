@@ -4,7 +4,7 @@
 
 namespace owl {
 
-Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/) : m_ViewportSize(size), m_WindowTitle(title), m_ClearColor(255, 255, 255) {
+Window::Window(vec2u size, std::string_view title, uint32_t style /* = Default*/) : m_ViewportSize(size), m_WindowTitle(title), m_ClearColor(255, 255, 255) {
     static bool glfwIsInitialized;
     static bool gladIsInitialized;
 
@@ -20,7 +20,7 @@ Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/)
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
     }
 
-    GLFWwindow* window = glfwCreateWindow(m_ViewportSize.width, m_ViewportSize.height, title.data(), nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(m_ViewportSize.x, m_ViewportSize.y, title.data(), nullptr, nullptr);
     m_GLFWWindow = std::unique_ptr<GLFWwindow, GlfwWindowDestructor>(window);
     glfwSetWindowUserPointer(window, this);
     glfwMakeContextCurrent(window);
@@ -60,9 +60,9 @@ Window::Window(Size size, std::string_view title, uint32_t style /* = Default*/)
     m_IsOpen = true;
 }
 
-auto Size::PrimaryMonitorSize() -> Size {
+auto PrimaryMonitorSize() -> vec2u {
     const GLFWvidmode* primaryVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    return { (size_t) primaryVideoMode->width, (size_t) primaryVideoMode->height };
+    return { (unsigned)primaryVideoMode->width, (unsigned)primaryVideoMode->height };
 }
 
 auto Window::KeyDown(int key) const -> bool {
@@ -70,8 +70,8 @@ auto Window::KeyDown(int key) const -> bool {
 }
 
 auto Window::UpdateViewport() -> void {
-    glfwGetFramebufferSize(m_GLFWWindow.get(), (int*)&m_ViewportSize.width, (int*)&m_ViewportSize.height);
-    glViewport(0, 0, m_ViewportSize.width, m_ViewportSize.height);
+    glfwGetFramebufferSize(m_GLFWWindow.get(), (int*)&m_ViewportSize.x, (int*)&m_ViewportSize.y);
+    glViewport(0, 0, m_ViewportSize.x, m_ViewportSize.y);
 }
 
 auto Window::IsOpen() const -> bool{
@@ -90,14 +90,14 @@ auto Window::IsMaximized() const -> bool {
     return glfwGetWindowAttrib(m_GLFWWindow.get(), GLFW_MAXIMIZED);
 }
 
-auto Window::GetSize() const -> Size {
+auto Window::GetSize() const -> vec2u {
     return m_ViewportSize;
 }
 
-auto Window::GetPosition() const -> Size {
+auto Window::GetPosition() const -> vec2u {
     int xPos, yPos;
     glfwGetWindowPos(m_GLFWWindow.get(), &xPos, &yPos);
-    return { (size_t) xPos, (size_t) yPos };
+    return { (unsigned) xPos, (unsigned) yPos };
 }
 
 auto Window::GetDeltaTime() const -> double {
@@ -116,21 +116,21 @@ auto Window::Close() -> void {
     m_IsOpen = false;
 }
 
-auto Window::SetSize(Size newSize) -> void {
-    glViewport(0, 0, newSize.width, newSize.height);
+auto Window::SetSize(vec2u newSize) -> void {
+    glViewport(0, 0, newSize.x, newSize.y);
     m_ViewportSize = newSize;
     m_ViewportSize = newSize;
 }
 
 auto Window::ToggleFullscreen() -> void {
     if(IsFullscreen()) {
-        glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_WindowSizeBuffer.width, m_WindowSizeBuffer.height, GLFW_DONT_CARE);
+        glfwSetWindowMonitor(m_GLFWWindow.get(), nullptr, m_WindowPos.x, m_WindowPos.y, m_WindowSizeBuffer.x, m_WindowSizeBuffer.y, GLFW_DONT_CARE);
         UpdateViewport();
         return;
     }
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* vidMode = glfwGetVideoMode(primaryMonitor);
-    glfwGetWindowSize(m_GLFWWindow.get(), (int*) &m_WindowSizeBuffer.width, (int*) &m_WindowSizeBuffer.height);
+    glfwGetWindowSize(m_GLFWWindow.get(), (int*) &m_WindowSizeBuffer.x, (int*) &m_WindowSizeBuffer.y);
     glfwGetWindowPos(m_GLFWWindow.get(), (int*) &m_WindowPos.x, (int*) &m_WindowPos.y);
     glfwSetWindowMonitor(m_GLFWWindow.get(), primaryMonitor, 0, 0, vidMode->width, vidMode->height, vidMode->refreshRate);
     UpdateViewport();
@@ -181,8 +181,8 @@ auto Window::SetStyle(uint32_t style) -> void {
     }
 }
 
-auto Window::SetPosition(Size newPos) -> void {
-    glfwSetWindowPos(m_GLFWWindow.get(), newPos.width, newPos.height);
+auto Window::SetPosition(vec2u newPos) -> void {
+    glfwSetWindowPos(m_GLFWWindow.get(), newPos.x, newPos.y);
 }
 
 auto Window::MouseCursorVisible(bool visible) -> void {
