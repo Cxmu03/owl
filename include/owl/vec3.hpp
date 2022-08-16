@@ -13,6 +13,8 @@ struct vec3 {
     vec3(T x, T y, T z) : x(x), y(y), z(z) {}
     vec3(const vec3& other) = default;
 
+    auto operator==(const vec3& other) const -> bool = default;
+
     auto SqrAbs() -> T;
     auto Abs() -> T;
     auto Normalized() -> vec3;

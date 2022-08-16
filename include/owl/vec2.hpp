@@ -15,6 +15,8 @@ struct vec2 {
     vec2(T x, T y) : x(x), y(y) {}
     vec2(const vec2& other) = default;
 
+    auto operator==(const vec2& other) const -> bool = default;
+
     auto SqrAbs() -> T;
     auto Abs() -> T;
     auto Normalized() -> vec2;
