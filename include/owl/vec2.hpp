@@ -11,6 +11,7 @@ struct vec2 {
     T x, y;
 
     vec2() : vec2(0, 0) {}
+    explicit vec2(T v) : vec2(v, v) {}
     vec2(T x, T y) : x(x), y(y) {}
     vec2(const vec2& other) = default;
 

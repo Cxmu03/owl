@@ -9,6 +9,7 @@ struct vec3 {
     T x, y, z;
 
     vec3() : vec3(0, 0, 0) {}
+    explicit vec3(T v) : vec3(v, v, v) {}
     vec3(T x, T y, T z) : x(x), y(y), z(z) {}
     vec3(const vec3& other) = default;
 
