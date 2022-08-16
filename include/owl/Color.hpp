@@ -20,6 +20,8 @@ struct RGB {
     RGB(uint8_t pr, uint8_t pg, uint8_t pb) : RGB(pr, pg, pb, 1.f) {}
     RGB(uint8_t r, uint8_t g, uint8_t b, float a) : r(r), g(g), b(b), a(1.f) {}
 
+    auto operator ==(const RGB& other) const -> bool = default;
+
     [[nodiscard]] operator GLRGB() const;
     [[nodiscard]] operator HSV() const;
 
@@ -41,6 +43,8 @@ struct GLRGB {
     GLRGB(float pr, float pg, float pb) : GLRGB(pr, pg, pb, 1.f) {}
     GLRGB(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
 
+    auto operator ==(const GLRGB& other) const -> bool = default;
+
     [[nodiscard]] operator RGB() const;
     [[nodiscard]] operator HSV() const;
 
@@ -59,6 +63,8 @@ struct HSV {
     HSV() = default;
     HSV(const HSV& other) = default;
     HSV(float h, float s, float v) : h(h), s(s), v(v) {}
+
+    auto operator ==(const HSV& other) const -> bool = default;
 
     [[nodiscard]] operator RGB() const;
     [[nodiscard]] operator GLRGB() const;
