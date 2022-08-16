@@ -2,8 +2,8 @@
 
 #include <glad/glad.h>
 
-#include <Shader.hpp>
-#include <Util.hpp>
+#include <shader.hpp>
+#include <util.hpp>
 
 struct ShaderSourceHelper {
     const char* data;

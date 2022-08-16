@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Window.hpp"
-#include "Shader.hpp"
-#include "Color.hpp"
+#include "window.hpp"
+#include "shader.hpp"
+#include "color.hpp"
 #include "vec2.hpp"
 #include "vec3.hpp"
-#include "FpsUtils.hpp"
-#include "Util.hpp"
+#include "framerate_limiter.hpp"
+#include "util.hpp"

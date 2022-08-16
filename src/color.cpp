@@ -1,7 +1,7 @@
 #include <cmath>
 
-#include <Color.hpp>
-#include <Util.hpp>
+#include <color.hpp>
+#include <util.hpp>
 
 namespace owl::color {
 

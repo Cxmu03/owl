@@ -2,7 +2,7 @@
 #include <thread>
 #include <iostream>
 
-#include <FpsUtils.hpp>
+#include <framerate_limiter.hpp>
 
 namespace owl {
 

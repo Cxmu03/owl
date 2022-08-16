@@ -7,8 +7,8 @@
 #include <GLFW/glfw3.h>
 #include <vec2.hpp>
 
-#include "Color.hpp"
-#include "FpsUtils.hpp"
+#include "color.hpp"
+#include "framerate_limiter.hpp"
 
 namespace owl {
 

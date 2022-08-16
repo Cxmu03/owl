@@ -11,7 +11,7 @@ add_definitions(-DGLFW_INCLUDE_NONE)
 
 add_subdirectory(vendor/glm)
 
-add_library(owl STATIC include/owl/Window.hpp src/Window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/Color.hpp src/Color.cpp include/owl/Util.hpp include/owl/Shader.hpp src/Shader.cpp include/owl/owl.hpp src/FpsUtils.cpp include/owl/FpsUtils.hpp include/owl/vec3.hpp include/owl/vec2.hpp)
+add_library(owl STATIC include/owl/window.hpp src/window.cpp vendor/glad/include/glad/glad.h vendor/glad/src/glad.c include/owl/color.hpp src/color.cpp include/owl/util.hpp include/owl/shader.hpp src/shader.cpp include/owl/owl.hpp src/framerate_limiter.cpp include/owl/framerate_limiter.hpp include/owl/vec3.hpp include/owl/vec2.hpp)
 
 target_include_directories(owl PUBLIC vendor/glad/include)
 target_include_directories(owl PUBLIC vendor/glfw/include)
