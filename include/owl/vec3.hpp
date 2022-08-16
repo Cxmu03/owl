@@ -8,6 +8,10 @@ template<typename T>
 struct vec3 {
     T x, y, z;
 
+    vec3() : vec3(0, 0, 0) {}
+    vec3(T x, T y, T z) : x(x), y(y), z(z) {}
+    vec3(const vec3& other) = default;
+
     auto SqrAbs() -> T;
     auto Abs() -> T;
     auto Normalized() -> vec3;

@@ -10,6 +10,10 @@ template<typename T>
 struct vec2 {
     T x, y;
 
+    vec2() : vec2(0, 0, 0) {}
+    vec2(T x, T y, T z) : x(x), y(y) {}
+    vec2(const vec2& other) = default;
+
     auto SqrAbs() -> T;
     auto Abs() -> T;
     auto Normalized() -> vec2;
